@@ -30,16 +30,16 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-ALLOWED_HOSTS = ['picku.onrender.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['pet-adopt-website-picku.onrender.com', '127.0.0.1', 'localhost']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://picku.onrender.com',
+    'https://pet-adopt-website-picku.onrender.com',
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5500",
     "http://localhost:5500",
-    "https://picku.onrender.com",
+    "https://pet-adopt-website-picku.onrender.com",
 ]
 
 # Application definition

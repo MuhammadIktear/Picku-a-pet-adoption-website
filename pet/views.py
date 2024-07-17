@@ -45,7 +45,7 @@ class SizeViewSet(viewsets.ModelViewSet):
     serializer_class=serializers.SizeSerializer
     
 class StatusViewSet(viewsets.ModelViewSet):
-    queryset=models.Pet.objects.all()
+    queryset=models.Status.objects.all()
     serializer_class=serializers.StatusSerializer
     
 class AdoptPetAPIView(generics.CreateAPIView):
@@ -55,7 +55,7 @@ class AdoptPetAPIView(generics.CreateAPIView):
     def post(self, request, pet_id):
         pet = get_object_or_404(models.Pet, id=pet_id)
         user = request.user
-        bank_account = get_object_or_404(UserAccount, user=user)  # Make sure this import is correct
+        bank_account = get_object_or_404(UserAccount, user=user) 
 
         available_status = models.Status.objects.filter(slug='available-to-adopt').first()  # Adjusted to use slugs
         adopted_status = models.Status.objects.filter(slug='adopted').first()  # Adjusted to use slugs

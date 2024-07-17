@@ -45,7 +45,7 @@ class Pet(models.Model):
     size = models.ManyToManyField(Size)
     sex = models.ManyToManyField(Sex)
     status = models.ForeignKey(Status, on_delete=models.PROTECT)
-    image = models.ImageField(upload_to='media/pet_images/')
+    image = models.ImageField(upload_to='pet_images/')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     rehoming_fee = models.DecimalField(default=0, max_digits=12, decimal_places=2)

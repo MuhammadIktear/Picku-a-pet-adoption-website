@@ -2,6 +2,12 @@ from rest_framework import serializers
 from . import models
 
 class PetSerializer(serializers.ModelSerializer):
+    sex = serializers.StringRelatedField(many=True)  
+    species = serializers.StringRelatedField(many=True)  
+    color = serializers.StringRelatedField(many=True)  
+    breed = serializers.StringRelatedField(many=True)  
+    size = serializers.StringRelatedField(many=True)  
+    status = serializers.StringRelatedField(many=False)
 
     class Meta:
         model = models.Pet

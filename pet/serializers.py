@@ -17,12 +17,14 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Review
         fields = ['body']
-    def validate(self, data):
-        user = data['user']
-        pet = data['pet']
-        if not models.Adopt.objects.filter(user=user, pet=pet).exists():
-            raise serializers.ValidationError("You can only review pets you have adopted.")
-        return data    
+    
+    def create(self, validated_data):
+        user = self.context['request'].user
+        review = models.Review.objects.create(
+            user=user,
+            **validated_data
+        )
+        return review  
 
 class SexSerializer(serializers.ModelSerializer):
     class Meta:

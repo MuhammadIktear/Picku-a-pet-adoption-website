@@ -16,30 +16,14 @@ class PetSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Review
-        fields = ['pet', 'body']  # Include only fields to be provided by the client
-
+        fields = '__all__'
     def create(self, validated_data):
-        request = self.context.get('request')
-        user = request.user if request and request.user.is_authenticated else None
-
-        if user is None:
-            raise serializers.ValidationError("User must be authenticated to create a review.")
-
-        # Retrieve pet instance from validated_data
-        pet = validated_data.get('pet')
-
-        # Retrieve or set user name and email
-        user_name = user.get_full_name() or 'Anonymous'
-        user_email = user.email or 'no-reply@example.com'
-
-        # Create review with automatic fields
+        user = self.context['request'].user
         review = models.Review.objects.create(
             user=user,
-            name=user_name,
-            email=user_email,
             **validated_data
         )
-        return review
+        return review   
 
 class SexSerializer(serializers.ModelSerializer):
     class Meta:

@@ -89,16 +89,4 @@ class Migration(migrations.Migration):
                 ('pet', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='pet.pet')),
             ],
         ),
-        migrations.CreateModel(
-            name='Review',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=30)),
-                ('email', models.EmailField(max_length=254)),
-                ('body', models.TextField()),
-                ('created_on', models.DateTimeField(auto_now_add=True)),
-                ('pet', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reviews', to='pet.pet')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-            ],
-        ),
     ]

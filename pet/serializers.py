@@ -16,7 +16,7 @@ class PetSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Review
-        fields = '__all__'
+        fields = ['body']
     def validate(self, data):
         user = data['user']
         pet = data['pet']

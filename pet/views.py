@@ -39,7 +39,6 @@ class PetViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
-    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         user = self.request.user
@@ -72,7 +71,6 @@ class StatusViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.StatusSerializer
 
 class AdoptPetAPIView(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
     serializer_class = serializers.AdoptSerializer
 
     def post(self, request, pet_id):

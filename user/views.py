@@ -89,7 +89,6 @@ class UserLogoutView(APIView):
     
     
 class DepositAPIView(APIView):
-    permission_classes = [IsAuthenticated]
     def post(self, request):
         user_account = get_object_or_404(UserAccount, user=request.user)
         serializer = DepositSerializer(data=request.data)
@@ -101,7 +100,6 @@ class DepositAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
     
 class PasswordChangeView(APIView):
-    permission_classes = [IsAuthenticated]
     def post(self, request):
         serializer = PasswordChangeSerializer(data=request.data, context={'request': request})
 

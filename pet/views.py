@@ -42,8 +42,9 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         user = self.request.user
-        pet_id = self.request.data.get('pet') 
-        if not models.Adopt.objects.filter(user=user, pet=pet_id).exists():
+        pet_id = self.request.data.get('pet')
+
+        if not models.Adopt.objects.filter(user=user, pet_id=pet_id).exists():
             raise serializers.ValidationError("You can only review pets you have adopted.")
         serializer.save(user=user)
 

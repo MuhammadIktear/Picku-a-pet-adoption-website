@@ -16,8 +16,14 @@ class PetSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Review
-        fields = ['id', 'pet', 'name', 'email', 'body'] 
-
+        fields = ['id', 'pet', 'body', 'name', 'email', 'created_on']
+    def validate(self, data):
+        user = data['user']
+        pet = data['pet']
+        if not models.Adopt.objects.filter(user=user, pet=pet).exists():
+            raise serializers.ValidationError("You can only review pets you have adopted.")
+        return data
+    
 class SexSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Sex

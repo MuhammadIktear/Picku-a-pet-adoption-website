@@ -39,6 +39,8 @@ class PetViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
+    permission_classes = [IsAuthenticated]
+
     def perform_create(self, serializer):
         user = self.request.user
         if not models.Adopt.objects.filter(user=user, pet=serializer.validated_data['pet']).exists():

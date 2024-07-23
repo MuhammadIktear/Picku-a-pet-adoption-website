@@ -16,14 +16,7 @@ class PetSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Review
-        fields = '__all__'
-    def create(self, validated_data):
-        user = self.context['request'].user
-        review = models.Review.objects.create(
-            user=user,
-            **validated_data
-        )
-        return review   
+        fields = ['id', 'pet', 'name', 'email', 'body'] 
 
 class SexSerializer(serializers.ModelSerializer):
     class Meta:

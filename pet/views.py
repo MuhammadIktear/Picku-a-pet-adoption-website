@@ -39,14 +39,10 @@ class PetViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        user = self.request.user
-        pet_id = self.request.data.get('pet')
-
-        if not models.Adopt.objects.filter(user=user, pet_id=pet_id).exists():
-            raise serializers.ValidationError("You can only review pets you have adopted.")
-        serializer.save(user=user)
+        serializer.save(user=self.request.user)
 
 class SexViewSet(viewsets.ModelViewSet):
     queryset = models.Sex.objects.all()

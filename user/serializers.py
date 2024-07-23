@@ -12,7 +12,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     user=serializers.StringRelatedField(many=False)
     class Meta:
         model = models.UserProfile
-        exclude = ('twitter', 'linkedin',)
+        fields = '__all__'
         
 
 class RegistrationSerializer(serializers.ModelSerializer):

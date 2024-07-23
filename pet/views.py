@@ -5,7 +5,6 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters as drf_filters
 from django_filters import rest_framework as filters
-from django.db.models import Q
 from user.models import UserAccount
 from . import models, serializers
 
@@ -40,6 +39,11 @@ class PetViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
+    def perform_create(self, serializer):
+        user = self.request.user
+        if not models.Adopt.objects.filter(user=user, pet=serializer.validated_data['pet']).exists():
+            raise serializers.ValidationError("You can only review pets you have adopted.")
+        serializer.save(user=user)
 
 class SexViewSet(viewsets.ModelViewSet):
     queryset = models.Sex.objects.all()

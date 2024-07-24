@@ -1,11 +1,7 @@
-from django.shortcuts import render
-from rest_framework import viewsets
-from .import models
 from .import serializers
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from . import models
-from . import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.tokens import default_token_generator
@@ -39,7 +35,7 @@ class UserRegistrationsApiView(APIView):
             user = serializer.save()
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            confirm_link = f'http://127.0.0.1:8000/user/activate/{uid}/{token}/'
+            confirm_link = f'http://pet-adopt-website-picku.onrender.com/user/activate/{uid}/{token}/'
             email_subject = "Confirm Your Email"
             email_body = render_to_string('confirm_email.html', {'confirm_link': confirm_link})
             email = EmailMultiAlternatives(email_subject, '', to=[user.email])

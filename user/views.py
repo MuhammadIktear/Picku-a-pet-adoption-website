@@ -20,6 +20,7 @@ from .serializers import DepositSerializer
 from rest_framework.permissions import IsAuthenticated
 from .serializers import PasswordChangeSerializer
 from .serializers import UserSerializer
+from rest_framework import generics
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -89,6 +90,15 @@ class UserLogoutView(APIView):
         logout(request)
         return redirect('login')
     
+class UserAccountDetailView(generics.RetrieveAPIView):
+    queryset = UserAccount.objects.all()
+    serializer_class = serializers.UserAccountSerializer
+    lookup_field = 'user_id'
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        return UserAccount.objects.filter(user_id=user_id)
+
     
 class DepositAPIView(APIView):
     def post(self, request):

@@ -56,7 +56,13 @@ class RegistrationSerializer(serializers.ModelSerializer):
 class UserLoginSerializer(serializers.Serializer):
     username=serializers.CharField(required=True)
     password=serializers.CharField(required=True)
-    
+
+class UserAccountSerializer(serializers.ModelSerializer):
+    user_profile = UserProfileSerializer(read_only=True, source='user.userprofile')
+
+    class Meta:
+        model = UserAccount
+        fields = ['id', 'account_no', 'balance', 'user', 'user_profile']        
     
 class DepositSerializer(serializers.Serializer):
     amount = serializers.DecimalField(max_digits=12, decimal_places=2)

@@ -19,7 +19,12 @@ from .models import UserAccount
 from .serializers import DepositSerializer
 from rest_framework.permissions import IsAuthenticated
 from .serializers import PasswordChangeSerializer
-# Create your views here.
+from .serializers import UserSerializer
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset=models.UserProfile.objects.all()
@@ -60,20 +65,21 @@ def activate_user(request, uidb64, token):
         return redirect('register')
 
 class UserLoginApiView(APIView):
-    def post(self,request):
-        serializer=serializers.UserLoginSerializer(data=self.request.data)
+    def post(self, request):
+        serializer = serializers.UserLoginSerializer(data=request.data)
         if serializer.is_valid():
-            username=serializer.validated_data['username']
-            password=serializer.validated_data['password']  
-            
-            user=authenticate(username=username,password=password)   
-            
+            username = serializer.validated_data['username']
+            password = serializer.validated_data['password']
+
+            user = authenticate(username=username, password=password)
+
             if user:
-                token,_=Token.objects.get_or_create(user=user)
-                login(request,user)
-                return Response({'token':token.key,'user_id':user.id})
+                token, _ = Token.objects.get_or_create(user=user)
+                login(request, user)
+                request.session['user_id'] = user.id 
+                return Response({'token': token.key, 'user_id': user.id})
             else:
-                return Response({'error':"Invalid Credential"})
+                return Response({'error': "Invalid Credentials"})
         return Response(serializer.errors)
                        
                                              

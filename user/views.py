@@ -26,10 +26,18 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class UserProfileList(generics.ListCreateAPIView):
+    queryset = models.UserProfile.objects.all()
+    serializer_class = serializers.UserProfileSerializer
 
-class UserProfileViewSet(viewsets.ModelViewSet):
-    queryset=models.UserProfile.objects.all()
-    serializer_class=serializers.UserProfileSerializer
+class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.UserProfile.objects.all()
+    serializer_class = serializers.UserProfileSerializer
+    lookup_field = 'user_id'
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        return models.UserProfile.objects.filter(user_id=user_id) 
     
 
 class UserRegistrationsApiView(APIView):

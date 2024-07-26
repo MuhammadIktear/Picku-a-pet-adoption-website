@@ -14,9 +14,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'first_name', 'last_name']
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
     class Meta:
         model = models.UserProfile
-        fields = '__all__'
+        fields = '__all__'       
+    def get_username(self, obj):
+        return obj.user.username        
         
 
 class RegistrationSerializer(serializers.ModelSerializer):

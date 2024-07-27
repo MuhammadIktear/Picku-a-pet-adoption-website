@@ -47,11 +47,11 @@ class PetReviewList(generics.ListCreateAPIView):
 class PetReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
-    lookup_field = 'pet_id'
+    lookup_field = 'pet'
 
     def get_queryset(self):
-        pet_id = self.kwargs['pet_id']
-        return models.Review.objects.filter(pet_id=pet_id) 
+        pet_id = self.kwargs['pet']
+        return models.Review.objects.filter(pet_id=pet_id)
 
 class SexViewSet(viewsets.ModelViewSet):
     queryset = models.Sex.objects.all()

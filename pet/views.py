@@ -8,6 +8,9 @@ from django_filters import rest_framework as filters
 from rest_framework.exceptions import ValidationError
 from user.models import UserAccount
 from . import models, serializers
+from django.core.mail import send_mail
+from django.conf import settings
+from rest_framework import status, generics
 
 class PetPagination(pagination.PageNumberPagination):
     page_size = 4
@@ -93,6 +96,7 @@ class AdoptPetAPIView(generics.CreateAPIView):
         if bank_account.balance < pet.rehoming_fee:
             return Response({"error": "Insufficient balance."}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Deduct the fee from the user's balance
         bank_account.balance -= pet.rehoming_fee
         bank_account.save()
 
@@ -102,7 +106,33 @@ class AdoptPetAPIView(generics.CreateAPIView):
         pet.save()
 
         # Create adoption record
-        adoption = models.Adopt.objects.create(user=user, pet=pet)
+        adoption = models.Adopt.objects.create(
+            user=user,
+            full_name=request.data.get('full_name'),
+            email=request.data.get('email'),
+            phone_no=request.data.get('phone_no'),
+            address=request.data.get('address'),
+            pet=pet
+        )
+        
+        # Serialize the adoption record for response
         serializer = serializers.AdoptSerializer(adoption)
 
+        # Send confirmation email
+        self.send_confirmation_email(
+            email=request.data.get('email'),
+            amount=pet.rehoming_fee,
+            new_balance=bank_account.balance
+        )
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def send_confirmation_email(self, email, amount, new_balance):
+        subject = 'Adoption Successful'
+        message = (
+            f'You have successfully paid ${amount}. Your new balance is ${new_balance}. '
+            'You can now contact the seller for further information.'
+        )
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = [email]
+        send_mail(subject, message, from_email, recipient_list)

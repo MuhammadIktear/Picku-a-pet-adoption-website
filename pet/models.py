@@ -68,5 +68,10 @@ class Review(models.Model):
     
 class Adopt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=40)
+    email = models.CharField(max_length=50)
+    phone_no = models.CharField(max_length=12)
+    address = models.CharField(max_length=255)
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
     adopt_date = models.DateTimeField(auto_now_add=True)
+

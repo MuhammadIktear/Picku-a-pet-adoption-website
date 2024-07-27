@@ -51,4 +51,5 @@ class StatusSerializer(serializers.ModelSerializer):
 class AdoptSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Adopt
-        fields = ''
+        fields = ['full_name', 'email', 'phone_no', 'address', 'pet', 'adopt_date']
+

@@ -1,4 +1,6 @@
 from rest_framework.routers import DefaultRouter
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path,include
 from . import views
 router=DefaultRouter()
@@ -15,4 +17,4 @@ urlpatterns=[
     path('account/<int:user_id>/', views.UserAccountDetailView.as_view(), name='user-account-detail'), 
     path('change-password/', views.PasswordChangeView.as_view(), name='change-password'),        
     path('activate/<uidb64>/<token>/', views.activate_user, name='activate'),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

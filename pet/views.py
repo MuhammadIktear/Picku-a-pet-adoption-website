@@ -44,6 +44,9 @@ class PetReviewList(generics.ListCreateAPIView):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user) 
+
 class PetReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer

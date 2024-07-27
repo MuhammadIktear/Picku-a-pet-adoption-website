@@ -40,17 +40,18 @@ class PetViewSet(viewsets.ModelViewSet):
     search_fields = ['species__slug', 'sex__slug', 'color__slug', 'breed__slug', 'size__slug', 'status__slug','name']
 
 
-class ReviewViewSet(viewsets.ModelViewSet):
+class PetReviewList(generics.ListCreateAPIView):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
 
-    def perform_create(self, serializer):
-        user = self.request.user
-        pet_id = self.request.data.get('pet')
+class PetReviewDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = models.Review.objects.all()
+    serializer_class = serializers.ReviewSerializer
+    lookup_field = 'pet_id'
 
-        if not models.Adopt.objects.filter(user=user, pet_id=pet_id).exists():
-            raise ValidationError("You can only review pets you have adopted.")
-        serializer.save(user=user)
+    def get_queryset(self):
+        pet_id = self.kwargs['pet_id']
+        return models.Review.objects.filter(pet_id=pet_id) 
 
 class SexViewSet(viewsets.ModelViewSet):
     queryset = models.Sex.objects.all()

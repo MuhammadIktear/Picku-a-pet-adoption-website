@@ -4,7 +4,6 @@ from . import views
 
 router = DefaultRouter()
 router.register('petlist', views.PetViewSet, basename='petlist')
-router.register('review', views.ReviewViewSet, basename='review')
 router.register('sex', views.SexViewSet, basename='sex')
 router.register('species', views.SpeciesViewSet, basename='species')
 router.register('color', views.ColorViewSet, basename='color')
@@ -15,4 +14,6 @@ router.register('status', views.StatusViewSet, basename='status')
 urlpatterns = [
     path('', include(router.urls)),
     path('adopt/<int:pet_id>/', views.AdoptPetAPIView.as_view(), name='adopt'),
+    path('PetReviewDetail/<int:pet_id>/',views.PetReviewDetail.as_view(),name='PetReviewDetail'), 
+    path('PetReviewList/',views.PetReviewList.as_view(),name='PetReviewList'),
 ]

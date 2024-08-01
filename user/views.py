@@ -110,14 +110,22 @@ class UserAccountDetailView(generics.RetrieveAPIView):
     
 class DepositAPIView(APIView):
     def post(self, request):
-        user_account = get_object_or_404(UserAccount, user=request.user)
-        serializer = DepositSerializer(data=request.data)
+        try:
+            user_account = get_object_or_404(UserAccount, user=request.user)
+            serializer = DepositSerializer(data=request.data)
 
-        if serializer.is_valid():
-            serializer.save(user_account=user_account)
-            return Response({"message": "Deposit successful", "new_balance": user_account.balance}, status=status.HTTP_200_OK)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+            if serializer.is_valid():
+                serializer.save(user_account=user_account)
+                return Response({
+                    "message": "Deposit successful",
+                    "new_balance": user_account.balance
+                }, status=status.HTTP_200_OK)
+            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    
     
 class PasswordChangeView(APIView):
     def post(self, request):

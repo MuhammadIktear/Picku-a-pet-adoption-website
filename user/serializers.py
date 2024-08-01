@@ -96,6 +96,9 @@ class DepositSerializer(serializers.Serializer):
         return user_account
 
     def send_confirmation_email(self, email, amount, new_balance):
+        from django.core.mail import send_mail
+        from django.conf import settings
+        
         subject = 'Deposit Confirmation'
         message = f'You have successfully deposited ${amount}. Your new balance is ${new_balance}.'
         from_email = settings.EMAIL_HOST_USER

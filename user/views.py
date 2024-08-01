@@ -123,7 +123,9 @@ class DepositAPIView(APIView):
             
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # Log the error
+            print(f"Error: {e}")
+            return Response({'error': 'An internal server error occurred.', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     
     

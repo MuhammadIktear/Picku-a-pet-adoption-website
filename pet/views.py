@@ -45,29 +45,28 @@ class PetViewSet(viewsets.ModelViewSet):
 
 
 class PetReviewList(generics.ListCreateAPIView):
-    serializer_class = serializers.ReviewSerializer
-    permission_classes = [AllowAny]  # Allow any user to see reviews
+    serializer_class = serializers.PetSerializer
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         pet_id = self.request.query_params.get('pet')
         if pet_id:
-            return models.Review.objects.filter(pet_id=pet_id)
-        return models.Review.objects.all()
+            pet = get_object_or_404(models.Pet, id=pet_id)
+            return [pet]  # Return a list with the single pet
+        return models.Pet.objects.all()
 
     def perform_create(self, serializer):
-        # Ensure that only users who have adopted the pet can create reviews
-        user = self.request.user
         pet_id = self.request.data.get('pet')
-        pet = models.Pet.objects.get(id=pet_id)
-        if pet.adopted_by != user:
-            raise PermissionDenied("You cannot review a pet you have not adopted.")
+        pet = get_object_or_404(models.Pet, id=pet_id)
+        reviews = pet.review
+        new_review = self.request.data.get('body')
+        if reviews != 'No reviews yet.':
+            reviews += '\n' + new_review
+        else:
+            reviews = new_review
+        pet.review = reviews
+        pet.save()
 
-class PetReviewDetail(generics.RetrieveAPIView):
-    serializer_class = serializers.ReviewSerializer
-    permission_classes = [AllowAny]
-    def get_object(self):
-        pet_id = self.kwargs['pet']
-        return models.Review.objects.filter(pet_id=pet_id)
     
 class SexViewSet(viewsets.ModelViewSet):
     queryset = models.Sex.objects.all()

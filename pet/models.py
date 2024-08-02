@@ -51,6 +51,7 @@ class Pet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     rehoming_fee = models.DecimalField(default=0, max_digits=12, decimal_places=2)
     details = models.TextField()
+    review=models.TextField(default='No reviews yet.')
 
     def __str__(self):
         return self.name 

@@ -21,6 +21,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import PasswordChangeSerializer
 from .serializers import UserSerializer
 from rest_framework import generics
+import logging
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -109,17 +110,17 @@ class UserAccountDetailView(generics.RetrieveAPIView):
 
     
 class DepositAPIView(APIView):
-    def post(self, request):
+    def put(self, request):
         try:
             user_account = get_object_or_404(UserAccount, user=request.user)
+
             serializer = DepositSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save(user_account=user_account)
                 return Response({"message": "Deposit successful", "new_balance": user_account.balance}, status=status.HTTP_200_OK)
+            
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            # Log the error for debugging purposes
-            import logging
             logger = logging.getLogger(__name__)
             logger.error(f"Internal Server Error: {str(e)}")
             return Response({"error": "An internal error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

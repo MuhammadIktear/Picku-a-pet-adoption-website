@@ -16,7 +16,7 @@ from django.contrib.auth import login,logout
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .serializers import DepositSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from .serializers import PasswordChangeSerializer
 from .serializers import UserSerializer
 from rest_framework import mixins, generics
@@ -25,16 +25,16 @@ import logging
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
+    permission_classes = [AllowAny]
 class UserProfileList(generics.ListCreateAPIView):
     queryset = models.UserProfile.objects.all()
     serializer_class = serializers.UserProfileSerializer
-
+    permission_classes = [AllowAny]
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.UserProfile.objects.all()
     serializer_class = serializers.UserProfileSerializer
     lookup_field = 'user_id'
-
+    permission_classes = [AllowAny]
     def get_queryset(self):
         user_id = self.kwargs['user_id']
         return models.UserProfile.objects.filter(user_id=user_id) 
@@ -42,7 +42,7 @@ class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class UserRegistrationsApiView(APIView):
     serializer_class = serializers.RegistrationSerializer
-
+    permission_classes = [AllowAny]
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
@@ -74,6 +74,7 @@ def activate_user(request, uidb64, token):
         return redirect('register')
 
 class UserLoginApiView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
         serializer = serializers.UserLoginSerializer(data=request.data)
         if serializer.is_valid():
@@ -116,6 +117,7 @@ class DepositAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
     
     
 class PasswordChangeView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         serializer = PasswordChangeSerializer(data=request.data, context={'request': request})
 

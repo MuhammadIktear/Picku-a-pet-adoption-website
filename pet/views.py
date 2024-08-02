@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, pagination, status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework import filters as drf_filters
 from django_filters import rest_framework as filters
 from rest_framework.exceptions import ValidationError
@@ -26,6 +26,8 @@ class PetFilter(filters.FilterSet):
     status = filters.CharFilter(field_name='status__slug', lookup_expr='iexact')
     created_by = filters.NumberFilter(field_name='created_by__id', lookup_expr='iexact')
     adopted_by = filters.NumberFilter(field_name='adopted_by__id', lookup_expr='iexact')
+    permission_classes = [AllowAny]
+    
 
     class Meta:
         model = models.Pet
@@ -38,11 +40,13 @@ class PetViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.DjangoFilterBackend, drf_filters.SearchFilter]
     filterset_class = PetFilter
     search_fields = ['species__slug', 'sex__slug', 'color__slug', 'breed__slug', 'size__slug', 'status__slug','name']
+    permission_classes = [AllowAny]
 
 
 class PetReviewList(generics.ListCreateAPIView):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user) 
@@ -51,6 +55,7 @@ class PetReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
     lookup_field = 'pet'
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         pet_id = self.kwargs['pet']
@@ -82,7 +87,7 @@ class StatusViewSet(viewsets.ModelViewSet):
 
 class AdoptPetAPIView(generics.CreateAPIView):
     serializer_class = serializers.AdoptSerializer
-
+    permission_classes = [IsAuthenticated]
     def post(self, request, pet_id):
         pet = get_object_or_404(models.Pet, id=pet_id)
         user = request.user

@@ -18,6 +18,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     first_name = serializers.SerializerMethodField()
     last_name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
+    balance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
     class Meta:
         model = models.UserProfile
@@ -27,13 +28,20 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return obj.user.username
 
     def get_first_name(self, obj):
-        return obj.user.first_name
+        return obj.user.first_name  
 
     def get_last_name(self, obj):
         return obj.user.last_name
 
     def get_email(self, obj):
         return obj.user.email
+    
+    def update(self, instance, validated_data):
+        if 'balance' in validated_data:
+            instance.balance += validated_data['balance']
+            instance.save()
+        return super().update(instance, validated_data)
+        
 
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(required = True)

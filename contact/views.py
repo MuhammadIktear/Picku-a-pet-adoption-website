@@ -7,3 +7,4 @@ from .import serializers
 class ContactUsViewset(viewsets.ModelViewSet):
     queryset=models.ContactUs.objects.all();
     serializer_class=serializers.ContactUsSerializer
+    

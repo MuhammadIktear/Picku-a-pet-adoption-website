@@ -64,26 +64,32 @@ class PetReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 class SexViewSet(viewsets.ModelViewSet):
     queryset = models.Sex.objects.all()
     serializer_class = serializers.SexSerializer
+    permission_classes = [AllowAny]
 
 class SpeciesViewSet(viewsets.ModelViewSet):
     queryset = models.Species.objects.all()
     serializer_class = serializers.SpeciesSerializer
+    permission_classes = [AllowAny]
 
 class ColorViewSet(viewsets.ModelViewSet):
     queryset = models.Color.objects.all()
     serializer_class = serializers.ColorSerializer
+    permission_classes = [AllowAny]
 
 class BreedViewSet(viewsets.ModelViewSet):
     queryset = models.Breed.objects.all()
     serializer_class = serializers.BreedSerializer
+    permission_classes = [AllowAny]
 
 class SizeViewSet(viewsets.ModelViewSet):
     queryset = models.Size.objects.all()
     serializer_class = serializers.SizeSerializer
+    permission_classes = [AllowAny]
 
 class StatusViewSet(viewsets.ModelViewSet):
     queryset = models.Status.objects.all()
     serializer_class = serializers.StatusSerializer
+    permission_classes = [AllowAny]
 
 class AdoptPetAPIView(generics.CreateAPIView):
     serializer_class = serializers.AdoptSerializer

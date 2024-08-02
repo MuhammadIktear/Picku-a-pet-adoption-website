@@ -42,9 +42,8 @@ admin.site.register(Pet)
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('pet', 'user', 'name', 'email', 'created_on')
+    list_display = ('pet', 'name', 'email', 'created_on')
     list_filter = ('created_on',)
-    search_fields = ('pet__name', 'user__username', 'name', 'email')
 
 @admin.register(Adopt)
 class AdoptAdmin(admin.ModelAdmin):

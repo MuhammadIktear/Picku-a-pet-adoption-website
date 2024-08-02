@@ -51,17 +51,15 @@ class Pet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     rehoming_fee = models.DecimalField(default=0, max_digits=12, decimal_places=2)
     details = models.TextField()
-    review=models.TextField(default='No reviews yet.')
 
     def __str__(self):
         return self.name 
     
 class Review(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='reviews')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     email = models.EmailField()
-    body = models.TextField()
+    body = models.TextField()   
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

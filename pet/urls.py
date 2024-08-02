@@ -13,6 +13,7 @@ router.register('status', views.StatusViewSet, basename='status')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('adopt/<int:pet_id>/', views.AdoptPetAPIView.as_view(), name='adopt'),
-    path('PetReviewList/',views.PetReviewList.as_view(),name='PetReviewList'),
+    path('PetReviewList/', views.PetReviewList.as_view(), name='PetReviewList'),
+    path('PetReviewDetail/<int:pk>/', views.PetReviewDetail.as_view(), name='PetReviewDetail'),
+
 ]

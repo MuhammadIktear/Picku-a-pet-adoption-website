@@ -103,6 +103,7 @@ class UserLogoutView(APIView):
 class DepositAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
     queryset = models.UserProfile.objects.all()
     serializer_class = DepositSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_object(self):
         # Retrieve the UserProfile instance for the authenticated user

@@ -70,17 +70,9 @@ class DepositSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['balance']
 
-    def validate_balance(self, value):
-        if value <= 0:
-            raise serializers.ValidationError("Deposit amount must be greater than zero.")
-        return value
-
     def update(self, instance, validated_data):
-        # Add the new deposit amount to the existing balance
-        deposit_amount = validated_data.get('balance', 0)
-        if deposit_amount > 0:
-            instance.balance += deposit_amount
-            instance.save()
+        instance.balance += validated_data.get('balance', 0)
+        instance.save()
         return instance
 
 

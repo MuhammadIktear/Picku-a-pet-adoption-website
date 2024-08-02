@@ -11,6 +11,7 @@ from . import models, serializers
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework import status, generics
+from django.core.exceptions import PermissionDenied
 
 class PetPagination(pagination.PageNumberPagination):
     page_size = 4
@@ -44,23 +45,30 @@ class PetViewSet(viewsets.ModelViewSet):
 
 
 class PetReviewList(generics.ListCreateAPIView):
-    queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
-    permission_classes = [AllowAny]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user) 
-
-class PetReviewDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = models.Review.objects.all()
-    serializer_class = serializers.ReviewSerializer
-    lookup_field = 'pet'
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny]  # Allow any user to see reviews
 
     def get_queryset(self):
+        pet_id = self.request.query_params.get('pet')
+        if pet_id:
+            return models.Review.objects.filter(pet_id=pet_id)
+        return models.Review.objects.all()
+
+    def perform_create(self, serializer):
+        # Ensure that only users who have adopted the pet can create reviews
+        user = self.request.user
+        pet_id = self.request.data.get('pet')
+        pet = models.Pet.objects.get(id=pet_id)
+        if pet.adopted_by != user:
+            raise PermissionDenied("You cannot review a pet you have not adopted.")
+
+class PetReviewDetail(generics.RetrieveAPIView):
+    serializer_class = serializers.ReviewSerializer
+    permission_classes = [AllowAny]
+    def get_object(self):
         pet_id = self.kwargs['pet']
         return models.Review.objects.filter(pet_id=pet_id)
-
+    
 class SexViewSet(viewsets.ModelViewSet):
     queryset = models.Sex.objects.all()
     serializer_class = serializers.SexSerializer

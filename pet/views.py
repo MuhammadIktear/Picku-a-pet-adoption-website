@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters as drf_filters
 from django_filters import rest_framework as filters
 from rest_framework.exceptions import ValidationError
-from user.models import UserAccount
+from user.models import UserProfile
 from . import models, serializers
 from django.core.mail import send_mail
 from django.conf import settings
@@ -86,7 +86,7 @@ class AdoptPetAPIView(generics.CreateAPIView):
     def post(self, request, pet_id):
         pet = get_object_or_404(models.Pet, id=pet_id)
         user = request.user
-        bank_account = get_object_or_404(UserAccount, user=user)
+        bank_account = get_object_or_404(UserProfile, user=user)
 
         available_status = models.Status.objects.filter(slug='available-to-adopt').first()
         adopted_status = models.Status.objects.filter(slug='adopted').first()

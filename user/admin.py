@@ -10,7 +10,3 @@ class UserAdmin(admin.ModelAdmin):
         return obj.user.last_name
 
 admin.site.register(models.UserProfile, UserAdmin)
-
-class UserAccountAdmin(admin.ModelAdmin):
-    list_display = ['account_no']    
-admin.site.register(models.UserAccount,UserAccountAdmin)

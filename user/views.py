@@ -15,7 +15,6 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import login,logout
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import UserAccount
 from .serializers import DepositSerializer
 from rest_framework.permissions import IsAuthenticated
 from .serializers import PasswordChangeSerializer
@@ -99,26 +98,19 @@ class UserLogoutView(APIView):
         logout(request)
         return redirect('login')
     
-class UserAccountDetailView(generics.RetrieveAPIView):
-    queryset = UserAccount.objects.all()
-    serializer_class = serializers.UserAccountSerializer
-    lookup_field = 'user_id'
-
-    def get_queryset(self):
-        user_id = self.kwargs['user_id']
-        return UserAccount.objects.filter(user_id=user_id)
 
     
 class DepositAPIView(APIView):
     def put(self, request):
         try:
-            user_account = get_object_or_404(UserAccount, user=request.user)
-
+            user_account = get_object_or_404(models.UserProfile, user=request.user)
             serializer = DepositSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save(user_account=user_account)
-                return Response({"message": "Deposit successful", "new_balance": user_account.balance}, status=status.HTTP_200_OK)
-            
+                return Response({
+                    "message": "Deposit successful",
+                    "new_balance": user_account.balance
+                }, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             logger = logging.getLogger(__name__)

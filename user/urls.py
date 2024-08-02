@@ -14,7 +14,6 @@ urlpatterns=[
     path('deposit/', views.DepositAPIView.as_view(), name='deposit'), 
     path('UserProfileList/',views.UserProfileList.as_view(),name='UserProfileList'),
     path('UserProfileDetail/<int:user_id>/',views.UserProfileDetail.as_view(),name='UserProfileDetail'), 
-    path('account/<int:user_id>/', views.UserAccountDetailView.as_view(), name='user-account-detail'), 
     path('change-password/', views.PasswordChangeView.as_view(), name='change-password'),        
     path('activate/<uidb64>/<token>/', views.activate_user, name='activate'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -5,7 +5,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import UserAccount,UserProfile
+from .models import UserProfile
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -57,14 +57,6 @@ class RegistrationSerializer(serializers.ModelSerializer):
         account.set_password(password)
         account.is_active=False
         account.save()
-        last_account = UserAccount.objects.all().order_by('account_no').last()
-        if last_account:
-            account_no = last_account.account_no + 1
-        else:
-            account_no = 10000
-
-        user_account = UserAccount(user=account, account_no=account_no, balance=0)
-        user_account.save()
         UserProfile.objects.create(user=account)
         return account
 
@@ -73,13 +65,6 @@ class UserLoginSerializer(serializers.Serializer):
     username=serializers.CharField(required=True)
     password=serializers.CharField(required=True)
 
-class UserAccountSerializer(serializers.ModelSerializer):
-    user_profile = UserProfileSerializer(read_only=True, source='user.userprofile')
-
-    class Meta:
-        model = UserAccount
-        fields = ['id', 'account_no', 'balance', 'user', 'user_profile']        
-    
 class DepositSerializer(serializers.Serializer):
     amount = serializers.DecimalField(max_digits=12, decimal_places=2)
 
@@ -93,7 +78,6 @@ class DepositSerializer(serializers.Serializer):
         user_account.balance += amount
         user_account.save()
         return user_account
-
 
         
 class PasswordChangeSerializer(serializers.Serializer):

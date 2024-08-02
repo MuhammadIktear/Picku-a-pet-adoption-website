@@ -4,7 +4,7 @@ from . import models
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Review
-        fields = ['id', 'pet', 'author', 'body', 'created_at']
+        fields = ['id', 'pet', 'author', 'author_username','author_email','body', 'created_at']
 
 class PetSerializer(serializers.ModelSerializer):
     sex = serializers.StringRelatedField(many=True)  

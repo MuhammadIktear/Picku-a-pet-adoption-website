@@ -58,6 +58,8 @@ class Pet(models.Model):
 class Review(models.Model):
     pet = models.ForeignKey(Pet, related_name='reviews', on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author_username=models.CharField(max_length=30)
+    author_email=models.CharField(max_length=50)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from . import models
-from rest_framework.permissions import IsAuthenticated,AllowAny
 
 class PetSerializer(serializers.ModelSerializer):
     sex = serializers.StringRelatedField(many=True)  
@@ -9,6 +8,7 @@ class PetSerializer(serializers.ModelSerializer):
     breed = serializers.StringRelatedField(many=True)  
     size = serializers.StringRelatedField(many=True)  
     status = serializers.StringRelatedField(many=False)
+
 
     class Meta:
         model = models.Pet
@@ -40,7 +40,7 @@ class BreedSerializer(serializers.ModelSerializer):
         model = models.Breed
         fields = '__all__'
 
-class SizeSerializer(serializers.ModelSerializer):
+class SizeSerializer(serializers.ModelSerializer):    
     class Meta:
         model = models.Size
         fields = '__all__'

@@ -113,19 +113,17 @@ class DepositAPIView(APIView):
         try:
             user_account = get_object_or_404(UserAccount, user=request.user)
             serializer = DepositSerializer(data=request.data)
-
             if serializer.is_valid():
                 serializer.save(user_account=user_account)
-                return Response({
-                    "message": "Deposit successful",
-                    "new_balance": user_account.balance
-                }, status=status.HTTP_200_OK)
-            
+                return Response({"message": "Deposit successful", "new_balance": user_account.balance}, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            # Log the error
-            print(f"Error: {e}")
-            return Response({'error': 'An internal server error occurred.', 'details': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # Log the error for debugging purposes
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Internal Server Error: {str(e)}")
+            return Response({"error": "An internal error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
     
     

@@ -19,7 +19,7 @@ from .serializers import DepositSerializer
 from rest_framework.permissions import IsAuthenticated
 from .serializers import PasswordChangeSerializer
 from .serializers import UserSerializer
-from rest_framework import generics
+from rest_framework import mixins, generics
 import logging
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -100,22 +100,17 @@ class UserLogoutView(APIView):
     
 
     
-class DepositAPIView(APIView):
-    def put(self, request):
-        try:
-            user_account = get_object_or_404(models.UserProfile, user=request.user)
-            serializer = DepositSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save(user_account=user_account)
-                return Response({
-                    "message": "Deposit successful",
-                    "new_balance": user_account.balance
-                }, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            logger = logging.getLogger(__name__)
-            logger.error(f"Internal Server Error: {str(e)}")
-            return Response({"error": "An internal error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+class DepositAPIView(mixins.UpdateModelMixin, generics.GenericAPIView):
+    queryset = models.UserProfile.objects.all()
+    serializer_class = DepositSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        # Retrieve the UserProfile instance for the authenticated user
+        return self.queryset.get(user=self.request.user)
+    
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
 
     

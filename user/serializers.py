@@ -18,7 +18,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
     first_name = serializers.SerializerMethodField()
     last_name = serializers.SerializerMethodField()
     email = serializers.SerializerMethodField()
-    balance = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
 
     class Meta:
         model = models.UserProfile
@@ -28,20 +27,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return obj.user.username
 
     def get_first_name(self, obj):
-        return obj.user.first_name  
+        return obj.user.first_name
 
     def get_last_name(self, obj):
         return obj.user.last_name
 
     def get_email(self, obj):
         return obj.user.email
-    
-    def update(self, instance, validated_data):
-        if 'balance' in validated_data:
-            instance.balance += validated_data['balance']
-            instance.save()
-        return super().update(instance, validated_data)
-        
 
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(required = True)
@@ -73,19 +65,24 @@ class UserLoginSerializer(serializers.Serializer):
     username=serializers.CharField(required=True)
     password=serializers.CharField(required=True)
 
-class DepositSerializer(serializers.Serializer):
-    amount = serializers.DecimalField(max_digits=12, decimal_places=2)
+class DepositSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['balance']
 
-    def validate_amount(self, value):
+    def validate_balance(self, value):
         if value <= 0:
             raise serializers.ValidationError("Deposit amount must be greater than zero.")
         return value
 
-    def save(self, user_account):
-        amount = self.validated_data['amount']
-        user_account.balance += amount
-        user_account.save()
-        return user_account
+    def update(self, instance, validated_data):
+        # Add the new deposit amount to the existing balance
+        deposit_amount = validated_data.get('balance', 0)
+        if deposit_amount > 0:
+            instance.balance += deposit_amount
+            instance.save()
+        return instance
+
 
         
 class PasswordChangeSerializer(serializers.Serializer):

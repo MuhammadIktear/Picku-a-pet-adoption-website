@@ -57,6 +57,10 @@ class Pet(models.Model):
     
 class Review(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
     name = models.CharField(max_length=30)
     email = models.EmailField()
     body = models.TextField()   

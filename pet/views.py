@@ -11,7 +11,6 @@ from . import models, serializers
 from django.core.mail import send_mail
 from django.conf import settings
 from rest_framework import status, generics
-from django.core.exceptions import PermissionDenied
 
 class PetPagination(pagination.PageNumberPagination):
     page_size = 4
@@ -49,18 +48,19 @@ class PetReviewList(generics.ListCreateAPIView):
     serializer_class = serializers.ReviewSerializer
     permission_classes = [AllowAny]
 
-    def get_queryset(self):
-        pet_id = self.request.query_params.get('pet', None)
-        if pet_id is not None:
-            return models.Review.objects.filter(pet_id=pet_id)
-        return super().get_queryset()
-    
-class PetReviewDetail(generics.RetrieveAPIView):
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user) 
+
+class PetReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Review.objects.all()
     serializer_class = serializers.ReviewSerializer
-    lookup_field = 'pk'
+    lookup_field = 'pet'
     permission_classes = [AllowAny]
-    
+
+    def get_queryset(self):
+        pet_id = self.kwargs['pet']
+        return models.Review.objects.filter(pet_id=pet_id)
+
 class SexViewSet(viewsets.ModelViewSet):
     queryset = models.Sex.objects.all()
     serializer_class = serializers.SexSerializer

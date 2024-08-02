@@ -1,6 +1,11 @@
 from rest_framework import serializers
 from . import models
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Review
+        fields = ['id', 'pet', 'author', 'body', 'created_at']
+
 class PetSerializer(serializers.ModelSerializer):
     sex = serializers.StringRelatedField(many=True)  
     species = serializers.StringRelatedField(many=True)  
@@ -8,16 +13,12 @@ class PetSerializer(serializers.ModelSerializer):
     breed = serializers.StringRelatedField(many=True)  
     size = serializers.StringRelatedField(many=True)  
     status = serializers.StringRelatedField(many=False)
-
+    reviews = ReviewSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Pet
-        fields = '__all__'
+        fields = ['id', 'name', 'species', 'breed', 'color', 'size', 'sex', 'status', 'image', 'created_by', 'adopted_by', 'created_at', 'rehoming_fee', 'details', 'reviews']
 
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Pet
-        fields = ['id', 'pet', 'body', 'name', 'email', 'created_on']
 
 
 class SexSerializer(serializers.ModelSerializer):    

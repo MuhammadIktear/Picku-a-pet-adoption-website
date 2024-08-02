@@ -5,12 +5,12 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework import filters as drf_filters
 from django_filters import rest_framework as filters
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError,PermissionDenied
 from user.models import UserProfile
 from . import models, serializers
 from django.core.mail import send_mail
 from django.conf import settings
-from rest_framework import status, generics
+from rest_framework import status, generics, mixins
 
 class PetPagination(pagination.PageNumberPagination):
     page_size = 4
@@ -43,28 +43,25 @@ class PetViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
 
 
-class PetReviewList(generics.ListCreateAPIView):
+class PetDetailView(generics.RetrieveAPIView):
+    queryset = models.Pet.objects.all()
     serializer_class = serializers.PetSerializer
-    permission_classes = [AllowAny]
-
-    def get_queryset(self):
-        pet_id = self.request.query_params.get('pet')
-        if pet_id:
-            pet = get_object_or_404(models.Pet, id=pet_id)
-            return [pet]  # Return a list with the single pet
-        return models.Pet.objects.all()
+    permission_classes = [IsAuthenticated]
+        
+        
+class ReviewCreateView(generics.CreateAPIView):
+    queryset = models.Review.objects.all()
+    serializer_class = serializers.ReviewSerializer
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        pet_id = self.request.data.get('pet')
-        pet = get_object_or_404(models.Pet, id=pet_id)
-        reviews = pet.review
-        new_review = self.request.data.get('body')
-        if reviews != 'No review yet.':
-            reviews += '\n' + new_review
-        else:
-            reviews = new_review
-        pet.review = reviews
-        pet.save() 
+        pet_id = self.kwargs.get('pet_id')
+        pet = models.Pet.objects.get(id=pet_id)
+        user = self.request.user
+        if pet.adopted_by != user:
+            raise PermissionDenied("You are not authorized to review this pet.")
+        
+        serializer.save(pet=pet, author=user)
 
 class SexViewSet(viewsets.ModelViewSet):
     queryset = models.Sex.objects.all()

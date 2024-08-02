@@ -51,11 +51,18 @@ class Pet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     rehoming_fee = models.DecimalField(default=0, max_digits=12, decimal_places=2)
     details = models.TextField()
-    review=models.TextField(default='No review yet.')
 
     def __str__(self):
-        return self.name 
-    
+        return self.name
+ 
+class Review(models.Model):
+    pet = models.ForeignKey(Pet, related_name='reviews', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Review by {self.author} on {self.created_at}'   
     
 class Adopt(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

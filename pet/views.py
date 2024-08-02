@@ -44,22 +44,27 @@ class PetViewSet(viewsets.ModelViewSet):
 
 
 class PetReviewList(generics.ListCreateAPIView):
-    queryset = models.Review.objects.all()
-    serializer_class = serializers.ReviewSerializer
-    permission_classes = [AllowAny]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user) 
-
-class PetReviewDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = models.Review.objects.all()
-    serializer_class = serializers.ReviewSerializer
-    lookup_field = 'pet'
+    serializer_class = serializers.PetSerializer
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        pet_id = self.kwargs['pet']
-        return models.Review.objects.filter(pet_id=pet_id)
+        pet_id = self.request.query_params.get('pet')
+        if pet_id:
+            pet = get_object_or_404(models.Pet, id=pet_id)
+            return [pet]  # Return a list with the single pet
+        return models.Pet.objects.all()
+
+    def perform_create(self, serializer):
+        pet_id = self.request.data.get('pet')
+        pet = get_object_or_404(models.Pet, id=pet_id)
+        reviews = pet.review
+        new_review = self.request.data.get('body')
+        if reviews != 'No review yet.':
+            reviews += '\n' + new_review
+        else:
+            reviews = new_review
+        pet.review = reviews
+        pet.save() 
 
 class SexViewSet(viewsets.ModelViewSet):
     queryset = models.Sex.objects.all()

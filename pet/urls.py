@@ -14,6 +14,5 @@ router.register('status', views.StatusViewSet, basename='status')
 urlpatterns = [
     path('', include(router.urls)),
     path('adopt/<int:pet_id>/', views.AdoptPetAPIView.as_view(), name='adopt'),
-    path('PetReviewDetail/<int:pet>/', views.PetReviewDetail.as_view(), name='PetReviewDetail'),
     path('PetReviewList/',views.PetReviewList.as_view(),name='PetReviewList'),
 ]

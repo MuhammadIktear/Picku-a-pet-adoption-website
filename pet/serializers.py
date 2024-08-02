@@ -16,7 +16,7 @@ class PetSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Review
+        model = models.Pet
         fields = ['id', 'pet', 'body', 'name', 'email', 'created_on']
 
 

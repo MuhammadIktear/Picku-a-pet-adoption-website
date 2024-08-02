@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Species, Sex, Breed, Color, Size, Pet ,Review,Adopt,Status
+from .models import Species, Sex, Breed, Color, Size, Pet ,Adopt,Status
 
 @admin.register(Species)
 class SpeciesAdmin(admin.ModelAdmin):
@@ -39,11 +39,6 @@ class SizeAdmin(admin.ModelAdmin):
     
 
 admin.site.register(Pet)
-
-@admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('pet', 'name', 'email', 'created_on')
-    list_filter = ('created_on',)
 
 @admin.register(Adopt)
 class AdoptAdmin(admin.ModelAdmin):

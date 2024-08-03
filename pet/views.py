@@ -46,7 +46,7 @@ class PetViewSet(viewsets.ModelViewSet):
 class PetDetailView(generics.RetrieveAPIView):
     queryset = models.Pet.objects.all()
     serializer_class = serializers.PetSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
         
         
 class ReviewCreateView(generics.CreateAPIView):

@@ -42,6 +42,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://pet-adopt-website-picku.onrender.com",
 ]
 
+CORS_ALLOW_CREDENTIALS = True
 # Application definition
 
 

@@ -7,6 +7,12 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ['id', 'pet', 'author', 'author_username','author_email','body', 'created_at']
 
 class PetSerializer(serializers.ModelSerializer):
+    sex = serializers.StringRelatedField() 
+    species = serializers.StringRelatedField() 
+    color = serializers.StringRelatedField()  
+    breed = serializers.StringRelatedField()
+    size = serializers.StringRelatedField()  
+    status = serializers.StringRelatedField()  
     reviews = ReviewSerializer(many=True, read_only=True)
 
     class Meta:

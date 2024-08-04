@@ -7,14 +7,6 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ['id', 'pet', 'author', 'author_username','author_email','body', 'created_at']
 
 class PetSerializer(serializers.ModelSerializer):
-    sex = serializers.StringRelatedField(many=True)  
-    species = serializers.StringRelatedField(many=True)  
-    color = serializers.StringRelatedField(many=True)  
-    breed = serializers.StringRelatedField(many=True)  
-    size = serializers.StringRelatedField(many=True)  
-    status = serializers.StringRelatedField(many=False)
-    reviews = ReviewSerializer(many=True, read_only=True)
-
     class Meta:
         model = models.Pet
         fields = ['id', 'name', 'species', 'breed', 'color', 'size', 'sex', 'status', 'image', 'created_by', 'adopted_by', 'created_at', 'rehoming_fee', 'details', 'reviews']

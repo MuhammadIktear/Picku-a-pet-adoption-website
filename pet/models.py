@@ -39,12 +39,12 @@ class Status(models.Model):
     
 class Pet(models.Model):
     name = models.CharField(max_length=100)
-    species = models.ManyToManyField(Species)
-    breed = models.ManyToManyField(Breed)
-    color = models.ManyToManyField(Color)
-    size = models.ManyToManyField(Size)
-    sex = models.ManyToManyField(Sex)
-    status = models.ForeignKey(Status, on_delete=models.PROTECT)
+    species = models.ForeignKey(Species,on_delete=models.CASCADE)
+    breed = models.ForeignKey(Breed,on_delete=models.CASCADE)
+    color = models.ForeignKey(Color,on_delete=models.CASCADE)
+    size = models.ForeignKey(Size,on_delete=models.CASCADE)
+    sex = models.ForeignKey(Sex,on_delete=models.CASCADE)
+    status = models.ForeignKey(Status, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='pet_images/')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_pets')
     adopted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='adopted_pets')

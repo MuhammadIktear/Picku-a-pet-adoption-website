@@ -45,6 +45,9 @@ class UserRegistrationsApiView(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
+        email = request.data.get('email')
+        if User.objects.filter(email=email).exists():
+            return Response({"error": "A user with this email already exists."}, status=400)        
         if serializer.is_valid():
             user = serializer.save()
             token = default_token_generator.make_token(user)

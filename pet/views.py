@@ -103,63 +103,84 @@ class StatusViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.StatusSerializer
     permission_classes = [AllowAny]
 
-class AdoptPetAPIView(generics.CreateAPIView):
-    serializer_class = serializers.AdoptSerializer
+
+class AdoptAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    def post(self, request, pet_id):
-        pet = get_object_or_404(models.Pet, id=pet_id)
-        user = request.user
-        bank_account = get_object_or_404(UserProfile, user=user)
+    serializer_class = serializers.AdoptSerializer
 
-        available_status = models.Status.objects.filter(slug='available-to-adopt').first()
-        adopted_status = models.Status.objects.filter(slug='adopted').first()
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user = request.user
+            pet_id = request.data.get('pet')
+            pet = models.Pet.objects.get(id=pet_id)
 
-        if not available_status or not adopted_status:
-            return Response({"error": "Status definitions are missing."}, status=status.HTTP_400_BAD_REQUEST)
+            if pet.adopted_by:
+                return Response({'error': 'Pet already adopted'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if pet.status != available_status:
-            return Response({"error": "This pet is not available for adoption."}, status=status.HTTP_400_BAD_REQUEST)
+            available_status = models.Status.objects.filter(slug='available-to-adopt').first()
+            adopted_status = models.Status.objects.filter(slug='adopted').first()
 
-        if bank_account.balance < pet.rehoming_fee:
-            return Response({"error": "Insufficient balance."}, status=status.HTTP_400_BAD_REQUEST)
+            if not available_status or not adopted_status:
+                return Response({"error": "Status definitions are missing."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Deduct the fee from the user's balance
-        bank_account.balance -= pet.rehoming_fee
-        bank_account.save()
+            if pet.status != available_status:
+                return Response({"error": "This pet is not available for adoption."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Update the pet's status
-        pet.status = adopted_status
-        pet.adopted_by = user
-        pet.save()
+            user_profile = UserProfile.objects.get(user=user)
+            if user_profile.balance < pet.rehoming_fee:
+                return Response({'error': 'Insufficient balance to adopt this pet'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create adoption record
-        adoption = models.Adopt.objects.create(
-            user=user,
-            full_name=request.data.get('full_name'),
-            email=request.data.get('email'),
-            phone_no=request.data.get('phone_no'),
-            address=request.data.get('address'),
-            pet=pet
-        )
+            pet.adopted_by = user
+            pet.status = adopted_status
+            pet.save()
+
+            user_profile.balance -= pet.rehoming_fee
+            user_profile.save()
+
+            # Save the adoption record
+            serializer.save(user=user)
+
+            # Retrieve the creator's UserProfile
+            creator_profile = UserProfile.objects.get(user=pet.created_by)
+            creator_profile.balance += pet.rehoming_fee
+            creator_profile.save()
+            creator_user = pet.created_by 
+
+            # Send emails
+            self.send_emails(pet, user,creator_user, user_profile, creator_profile)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-        # Serialize the adoption record for response
-        serializer = serializers.AdoptSerializer(adoption)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # Send confirmation email
-        self.send_confirmation_email(
-            email=request.data.get('email'),
-            amount=pet.rehoming_fee,
-            new_balance=bank_account.balance
-        )
+    def send_emails(self, pet, adopter, creator_user,user_profile, creator_profile):
+        creator_phone = creator_profile.mobile_no 
+        adopter_phone=user_profile.mobile_no
+        creator_balance = creator_profile.balance
+        current_balance=user_profile.balance
+        print(f"Creator Phone: {creator_phone}")
+        print(f"Creator Balance: {creator_balance}")
+        try:
+            send_mail(
+                'Pet Adopted',
+                f'Your pet {pet.name} has been adopted.\nAdopter contact details:\nEmail: {adopter.email}\nPhone: {adopter_phone}\nYour current balance: ${creator_balance}',
+                settings.EMAIL_HOST_USER,
+                [creator_user.email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            print(f"Error sending email to pet creator: {e}")
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        try:
+            send_mail(
+                'Adoption Confirmation',
+                f'Congratulations! You have adopted {pet.name}.\nContact details of the pet creator:\nEmail: {creator_user.email}\nPhone: {creator_phone}\nYour current balance: ${current_balance}',
+                settings.EMAIL_HOST_USER,
+                [adopter.email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            print(f"Error sending email to adopter: {e}")
 
-    def send_confirmation_email(self, email, amount, new_balance):
-        subject = 'Adoption Successful'
-        message = (
-            f'You have successfully paid ${amount}. Your new balance is ${new_balance}. '
-            'You can now contact the seller for further information.'
-        )
-        from_email = settings.EMAIL_HOST_USER
-        recipient_list = [email]
-        send_mail(subject, message, from_email, recipient_list)
+

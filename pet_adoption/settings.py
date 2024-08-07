@@ -29,22 +29,7 @@ SECRET_KEY = 'django-insecure-^m(0va_ae+j$e6a6=lj^k$wry4@yhkwy=_9#i9&3)(z^xv1nrd
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
-ALLOWED_HOSTS = ['pet-adopt-website-picku.onrender.com', '127.0.0.1', 'localhost']
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://pet-adopt-website-picku.onrender.com',
-]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5500",
-    "http://localhost:5500",
-    "https://main--stirring-kitten-6cd5ff.netlify.app",
-    "https://pet-adopt-website-picku.onrender.com",
-]
-
-CORS_ALLOW_CREDENTIALS = True
-
+CSRF_TRUSTED_ORIGINS = ['https://pet-adopt-website-picku.onrender.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -103,7 +88,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

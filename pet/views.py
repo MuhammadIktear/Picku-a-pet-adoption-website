@@ -24,8 +24,8 @@ class PetFilter(filters.FilterSet):
     breed = filters.CharFilter(field_name='breed__slug', lookup_expr='iexact')
     size = filters.CharFilter(field_name='size__slug', lookup_expr='iexact')
     status = filters.CharFilter(field_name='status__slug', lookup_expr='iexact')
-    created_by = filters.NumberFilter(field_name='created_by__id', lookup_expr='iexact')
-    adopted_by = filters.NumberFilter(field_name='adopted_by__id', lookup_expr='iexact')
+    created_by = filters.NumberFilter(field_name='created_by__id', lookup_expr='exact')
+    adopted_by = filters.NumberFilter(field_name='adopted_by__id', lookup_expr='exact')
     permission_classes = [AllowAny]
     
 

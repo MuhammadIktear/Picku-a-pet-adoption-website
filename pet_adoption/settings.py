@@ -23,26 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^m(0va_ae+j$e6a6=lj^k$wry4@yhkwy=_9#i9&3)(z^xv1nrd'
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
-ALLOWED_HOSTS = ['pet-adopt-website-picku.onrender.com', '127.0.0.1', 'localhost']
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://pet-adopt-website-picku.onrender.com',
-]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5500",
-    "http://localhost:5500",
-    "https://pet-adopt-website-picku.onrender.com",
-]
-
-CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS = ['https://pet-adopt-website-picku.onrender.com']
 
 
 INSTALLED_APPS = [
@@ -98,11 +85,14 @@ WSGI_APPLICATION = 'pet_adoption.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env("DB_NAME"),
+        'USER': env("DB_USER"),
+        'PASSWORD': env("DB_PASSWORD"),
+        'HOST': env("DB_HOST"),
+        'PORT': env("DB_PORT"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

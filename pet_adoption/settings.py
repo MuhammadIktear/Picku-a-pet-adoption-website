@@ -25,10 +25,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 SECRET_KEY = env("SECRET_KEY")
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ['https://pet-adopt-website-picku.onrender.com']
+ALLOWED_HOSTS = ['pet-adopt-website-picku.onrender.com', '127.0.0.1', 'localhost']
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://pet-adopt-website-picku.onrender.com',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "https://main--stirring-kitten-6cd5ff.netlify.app",
+    "https://pet-adopt-website-picku.onrender.com",
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',

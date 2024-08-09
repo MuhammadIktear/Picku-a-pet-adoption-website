@@ -1,8 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
 from . import views
-from django.conf import settings
-from django.conf.urls.static import static
 
 router = DefaultRouter()
 router.register('petlist', views.PetViewSet, basename='petlist')
@@ -19,4 +17,4 @@ urlpatterns = [
     path('<int:pk>/', views.PetDetailView.as_view(), name='pet-detail'),
     path('adopt/', views.AdoptAPIView.as_view(), name='adopt-pet'),
     path('<int:pet_id>/reviews/', views.ReviewCreateView.as_view(), name='create-review'),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]

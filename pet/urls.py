@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 
 router = DefaultRouter()
 router.register('petlist', views.PetViewSet, basename='petlist')
+router.register('list', views.PetViewSetwithoutPagination, basename='list')
 router.register('sex', views.SexViewSet, basename='sex')
 router.register('species', views.SpeciesViewSet, basename='species')
 router.register('color', views.ColorViewSet, basename='color')

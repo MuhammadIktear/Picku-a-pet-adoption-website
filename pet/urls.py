@@ -19,6 +19,4 @@ urlpatterns = [
     path('<int:pk>/', views.PetDetailView.as_view(), name='pet-detail'),
     path('adopt/', views.AdoptAPIView.as_view(), name='adopt-pet'),
     path('<int:pet_id>/reviews/', views.ReviewCreateView.as_view(), name='create-review'),
-]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

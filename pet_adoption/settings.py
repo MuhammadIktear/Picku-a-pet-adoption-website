@@ -14,7 +14,7 @@ from pathlib import Path
 import environ
 import os
 import dj_database_url
-
+import cloudinary_storage
 env = environ.Env()
 environ.Env.read_env()
 
@@ -161,3 +161,11 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'ds97wytcs',
+    'API_KEY': '618749815527153',
+    'API_SECRET': 'EXuQOMJUKSZWxostZgjFTShyt8U'
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CLOUDINARY_URL='cloudinary://618749815527153:EXuQOMJUKSZWxostZgjFTShyt8U@ds97wytcs'

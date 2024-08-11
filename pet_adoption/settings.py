@@ -148,7 +148,6 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 # Cloudinary settings
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'ds97wytcs',

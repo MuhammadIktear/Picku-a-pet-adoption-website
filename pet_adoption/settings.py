@@ -140,7 +140,7 @@ STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
 # Media files configuration
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-MEDIA_URL = ''
+MEDIA_URL = 'https://res.cloudinary.com/ds97wytcs/image/upload/v1/'
 # Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -151,13 +151,10 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Cloudinary configuration
+# Cloudinary settings
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'ds97wytcs',
     'API_KEY': '618749815527153',
     'API_SECRET': 'EXuQOMJUKSZWxostZgjFTShyt8U'
 }
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_URL = 'cloudinary://618749815527153:EXuQOMJUKSZWxostZgjFTShyt8U@ds97wytcs'

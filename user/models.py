@@ -4,7 +4,7 @@ from cloudinary.models import CloudinaryField
 # Create your models here.
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = CloudinaryField('picku/profile_image', null=False)
+    image = CloudinaryField('profile_image')
     mobile_no = models.CharField(max_length=12)
     location = models.CharField(max_length=100, blank=True, null=True)
     twitter = models.URLField(max_length=200, blank=True, null=True)

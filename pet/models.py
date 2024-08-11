@@ -46,7 +46,7 @@ class Pet(models.Model):
     size = models.ManyToManyField(Size)
     sex = models.ManyToManyField(Sex)
     status = models.ForeignKey(Status, on_delete=models.PROTECT)
-    image = CloudinaryField('picku/pet_image', null=False)
+    image = CloudinaryField('pet_image')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_pets')
     adopted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='adopted_pets')
     created_at = models.DateTimeField(auto_now_add=True)

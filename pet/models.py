@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
 
 class Species(models.Model):
     name = models.CharField(max_length=100)
@@ -45,7 +46,7 @@ class Pet(models.Model):
     size = models.ManyToManyField(Size)
     sex = models.ManyToManyField(Sex)
     status = models.ForeignKey(Status, on_delete=models.PROTECT)
-    image = models.FileField(upload_to='picku/pet_image', blank=True, null=True)
+    image = CloudinaryField('picku/pet_image', null=False)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_pets')
     adopted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='adopted_pets')
     created_at = models.DateTimeField(auto_now_add=True)

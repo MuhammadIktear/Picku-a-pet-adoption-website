@@ -2,6 +2,9 @@ from pathlib import Path
 import environ
 import os
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Initialize environment variables
 env = environ.Env()
@@ -137,7 +140,7 @@ STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
 # Media files configuration
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-MEDIA_URL = 'https://res.cloudinary.com/ds97wytcs/image/upload/v1/'
+MEDIA_URL = ''
 # Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -148,10 +151,13 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# Cloudinary settings
+
+# Cloudinary configuration
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'ds97wytcs',
     'API_KEY': '618749815527153',
     'API_SECRET': 'EXuQOMJUKSZWxostZgjFTShyt8U'
 }
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_URL = 'cloudinary://618749815527153:EXuQOMJUKSZWxostZgjFTShyt8U@ds97wytcs'

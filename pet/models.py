@@ -45,6 +45,7 @@ class Pet(models.Model):
     size = models.ManyToManyField(Size)
     sex = models.ManyToManyField(Sex)
     status = models.ForeignKey(Status, on_delete=models.PROTECT)
+    location = models.CharField(max_length=100)
     image = models.URLField(max_length=200,blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_pets')
     adopted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='adopted_pets')

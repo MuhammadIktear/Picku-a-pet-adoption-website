@@ -72,9 +72,9 @@ def activate_user(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        return redirect('https://main--stirring-kitten-6cd5ff.netlify.app/login')
+        return redirect('https://picku-a-pet-adoption-website.netlify.app/login')
     else:
-        return redirect('https://main--stirring-kitten-6cd5ff.netlify.app/register')
+        return redirect('https://picku-a-pet-adoption-website.netlify.app/register')
 
 class UserLoginApiView(APIView):
     permission_classes = [AllowAny]

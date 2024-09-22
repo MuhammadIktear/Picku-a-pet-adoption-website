@@ -34,6 +34,7 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5500",
     "http://localhost:5500",
+    "https://picku-a-pet-adoption-website.netlify.app/",
     "https://picku-a-pet-adoption-website.onrender.com"
 ]
 

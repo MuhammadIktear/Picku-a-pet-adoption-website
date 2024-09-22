@@ -25,20 +25,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    'pet-adopt-website-picku.onrender.com',
-    '127.0.0.1',
-    'localhost'
-]
+ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://pet-adopt-website-picku.onrender.com'
+    'https://picku-a-pet-adoption-website.onrender.com'
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5500",
     "http://localhost:5500",
-    "https://pet-adopt-website-picku.onrender.com"
+    "https://picku-a-pet-adoption-website.onrender.com"
 ]
 
 CORS_ALLOW_CREDENTIALS = True

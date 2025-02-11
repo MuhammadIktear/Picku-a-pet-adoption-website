@@ -25,9 +25,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','.vercel.app']
-
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'picku-pet-website-deployment1.vercel.app'
+]
+CSRF_TRUSTED_ORIGINS = [
+    "https://picku-pet-website-deployment1.vercel.app"
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "https://picku-a-pet-adoption-website.netlify.app",
+    "https://picku-pet-website-deployment1.vercel.app"
+]
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',

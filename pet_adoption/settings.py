@@ -26,8 +26,8 @@ SECRET_KEY = env("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'picku-pet-website-deployment1.vercel.app'
+    "127.0.0.1",
+    ".vercel.app"
 ]
 CSRF_TRUSTED_ORIGINS = [
     "https://picku-pet-website-deployment1.vercel.app"

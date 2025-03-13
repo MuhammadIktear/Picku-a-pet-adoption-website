@@ -2,7 +2,7 @@ Picku (Pet Adoption Website)
 
 Live : https://picku-a-pet-adoption-website.netlify.app/login.html
 
-Github : https://github.com/MuhammadIktear/Picku-a-pet-adoption-website
+Frontend git ripo : https://github.com/MuhammadIktear/PICKU-Frontend
 
 Description : Picku is a user-friendly pet adoption website that connects pets in need 
 with loving homes. Users can browse available pets, create and manage pet listings, and 
